@@ -65,6 +65,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Datos\Conection.cs" />
+    <Compile Include="Datos\Implementacion\ClienteDao.cs" />
+    <Compile Include="Datos\Interfaz\IDaoCliente.cs" />
     <Compile Include="Datos\Parametro.cs" />
     <Compile Include="Dominio\Cliente.cs" />
     <Compile Include="Dominio\Cuenta.cs" />
@@ -103,6 +105,8 @@
     <Compile Include="Reporte\Reporte.Designer.cs">
       <DependentUpon>Reporte.cs</DependentUpon>
     </Compile>
+    <Compile Include="Servicios\Implementacion\Servicio.cs" />
+    <Compile Include="Servicios\Interfaz\IServicio.cs" />
     <Compile Include="SqlServerTypes\Loader.cs" />
     <EmbeddedResource Include="Formularios\Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>

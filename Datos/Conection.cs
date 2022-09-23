@@ -24,24 +24,29 @@ namespace BancoApp2.Datos
                 instancia = new Conection();
             return instancia;
         }
-        public DataTable ConsultarSQL(string nombreSP)
+
+        public int ObtenerProximo(string nombreSP, string nombrePOut) //Nro de proximo cliente
         {
-            SqlCommand cmdConsulta = new SqlCommand();
-            DataTable table = new DataTable();
+            SqlCommand cmdProximo = new SqlCommand();
             cnn.Open();
-            cmdConsulta.Connection = cnn;
-            cmdConsulta.CommandType = CommandType.StoredProcedure;
-            cmdConsulta.CommandText = nombreSP;
-            table.Load(cmdConsulta.ExecuteReader());
+            cmdProximo.Connection = cnn;
+            cmdProximo.CommandType = CommandType.StoredProcedure;
+            cmdProximo.CommandText = nombreSP;
+            SqlParameter pOut = new SqlParameter();
+            pOut.ParameterName = nombrePOut;
+            pOut.DbType = DbType.Int32;
+            pOut.Direction = ParameterDirection.Output;
+            cmdProximo.Parameters.Add(pOut);
+            cmdProximo.ExecuteNonQuery();
             cnn.Close();
-            return table;
+            return (int)pOut.Value;
         }
 
-        public DataTable ConsultarBD(string sp_nombre, List<Parametro> values)
+        public DataTable ConsultarSQL(string nombreSP, List<Parametro> values) //para consulta sql con lst de parametros (sirve para: cargar combo, )
         {
             DataTable tabla = new DataTable();
             cnn.Open();
-            SqlCommand cmd = new SqlCommand(sp_nombre, cnn);
+            SqlCommand cmd = new SqlCommand(nombreSP, cnn);
             cmd.CommandType = CommandType.StoredProcedure;
             if (values != null)
             {
@@ -57,23 +62,22 @@ namespace BancoApp2.Datos
             return tabla;
         }
 
-        public int ProximoCliente(string nombreSP)
+        public DataTable ConsultarSQL(string nombreSP)
         {
-            SqlCommand cmdProximo = new SqlCommand();
+            SqlCommand cmdConsulta = new SqlCommand();
+            DataTable table = new DataTable();
             cnn.Open();
-            cmdProximo.Connection = cnn;
-            cmdProximo.CommandType = CommandType.StoredProcedure;
-            cmdProximo.CommandText = nombreSP;
-            SqlParameter pOut = new SqlParameter();
-            pOut.ParameterName = "@next";
-            pOut.DbType = DbType.Int32;
-            pOut.Direction = ParameterDirection.Output;
-            cmdProximo.Parameters.Add(pOut);
-            cmdProximo.ExecuteNonQuery();
+            cmdConsulta.Connection = cnn;
+            cmdConsulta.CommandType = CommandType.StoredProcedure;
+            cmdConsulta.CommandText = nombreSP;
+            table.Load(cmdConsulta.ExecuteReader());
             cnn.Close();
-            return (int)pOut.Value;
-
+            return table;
         }
+
+       
+
+        
         public bool ConfirmarCliente(Cliente oCliente) //Ejecutar SQL sin parametros
         {
             bool ok = true;

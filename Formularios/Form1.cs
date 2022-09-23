@@ -1,5 +1,7 @@
 ﻿using BancoApp2.Datos;
 using BancoApp2.Dominio;
+using BancoApp2.Servicios.Implementacion;
+using BancoApp2.Servicios.Interfaz;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,17 +16,19 @@ namespace BancoApp2.Formularios
 {
     public partial class FrmBanco : Form
     {
+        private IServicio gestor;
         private Cliente nuevo;
         public FrmBanco()
         {
             InitializeComponent();
+            gestor = new Servicio();
             nuevo = new Cliente();
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
             CargarCombo();
-            ProximoCliente();
+            ObtenerProximo(); //Nro de proximo cliente
             txtApellido.Text = string.Empty;
             txtNombre.Text = string.Empty;
             txtDNI.Text = string.Empty;
@@ -34,25 +38,21 @@ namespace BancoApp2.Formularios
             this.ActiveControl = txtApellido;
         }
 
-        private void ProximoCliente()
+        private void ObtenerProximo() //Nro de proximo cliente
         {
-            int next = Conection.ObtenerInstancia().ProximoCliente("SP_PROXIMO_ID");
+            int next = gestor.ObtenerProximo();
             if (next > 0)
                 lblCliente.Text = "Cliente Nº: " + next.ToString();
             else
                 MessageBox.Show("Error de datos. No se puede obtener Nº de presupuesto!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
-        private void CargarCombo()
+        private void CargarCombo() //para cargar combo
         {
-            DataTable tabla =  Conection.ObtenerInstancia().ConsultarSQL("SP_LISTAR_TIPOS_CUENTAS");
-            if (tabla != null)
-            {
-                cboTipo.DataSource = tabla;
-                cboTipo.ValueMember = "id_tipo_cuenta";
-                cboTipo.DisplayMember = "nombre_cuenta";
+                cboTipo.DataSource = gestor.ObtenerTodos();
+                cboTipo.ValueMember = "id_tipo_cuenta"; //nombre del atributo de la clase
+                cboTipo.DisplayMember = "tipoCuenta"; //nombre del atributo de la clase
                 cboTipo.DropDownStyle = ComboBoxStyle.DropDownList;
-            }
         }
 
         private void btnAgregar_Click(object sender, EventArgs e)

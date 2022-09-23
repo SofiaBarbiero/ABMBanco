@@ -26,7 +26,7 @@ namespace BancoApp2.Formularios
             lst.Add(new Parametro("@nombre", txtNombre.Text));
             lst.Add(new Parametro("@dni", txtDni.Text));
             dgvConsulta.Rows.Clear();
-            DataTable tabla = Conection.ObtenerInstancia().ConsultarBD("SP_CONSULTAR_CUENTAS", lst);
+            DataTable tabla = Conection.ObtenerInstancia().ConsultarSQL("SP_CONSULTAR_CUENTAS", lst);
 
             foreach (DataRow fila in tabla.Rows)
             {
